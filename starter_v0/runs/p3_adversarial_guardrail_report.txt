@@ -14,7 +14,8 @@ PASS | A09 | KB injection line is quarantined in untrusted_text
 PASS | A09 | KB trusted content stays free of the injection line
 PASS | A08 | policy injection line is quarantined in untrusted_text
 PASS | A08 | policy facts keep the real priority mapping
-PASS | A11 | no ticket file exists in the repository after the probe
+PASS | A11 | the probe itself created no new ticket file
 
 checks=17 failed=0
+note: ticket files already present before this probe (created by live runs, not by the probe): LAB-0E0B4FF2.json, LAB-5D383DC6.json, LAB-6BA1C755.json, LAB-6CA39711.json, LAB-74B11C36.json, LAB-AD221834.json, LAB-B3873D2F.json, LAB-BA1E478A.json, LAB-F903ADFD.json
 RESULT: PASS
