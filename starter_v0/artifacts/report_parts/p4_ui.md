@@ -1,4 +1,4 @@
-# P4 — UI + Transcript + Report (Hoàng Ngọc Đức)
+# P4 — UI + Transcript + Report (Hoàng Ngọc Đức, MSSV 02380)
 
 ## A1. Agent này làm được gì
 

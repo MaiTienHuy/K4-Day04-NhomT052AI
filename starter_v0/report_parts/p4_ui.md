@@ -1,5 +1,5 @@
 # Đóng góp Phần P4 — UI + Transcript + Report
-**Người thực hiện:** Hoàng Ngọc Đức (MSSV: 2A202602380)  
+**Người thực hiện:** Hoàng Ngọc Đức (MSSV: 02380)  
 **Phạm vi phụ trách:** Giao diện Streamlit (`app.py`), Thu thập Transcript kiểm chứng và Viết phần báo cáo liên quan (A1, A3, A4, B4, B7).
 
 ---
