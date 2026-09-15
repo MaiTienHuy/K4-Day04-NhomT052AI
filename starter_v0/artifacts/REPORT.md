@@ -5,7 +5,7 @@
 - Team: T052AI
 - Members: Mai Tiến Huy (P1, 02914), Trịnh Xuân Huy (P2, 02995), Lê Việt Hoàng (P3, 02596), Hoàng Ngọc Đức (P4, 02380)
 - Provider/model: OpenRouter / `openai/gpt-4o-mini`
-- Repo: https://github.com/MaiTienHuy/K4-Day04-NhomT052AI
+- Repo: https://github.com/MaiTienHuy/K4-Day04-NhomT052AI-PromptEngineeringToolCalling
 
 Bốn thành viên đóng góp đều nhau trên cùng một `REPORT.md`: mỗi người phụ trách một khối evidence và một mục B7. Phần A–B6 là bản chung; B7.1–B7.4 do từng người tự commit bằng Git identity của mình.
 

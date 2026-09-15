@@ -4,7 +4,7 @@
 
 Agent helpdesk nội bộ Northstar Labs: đọc status dịch vụ dùng chung, snapshot asset, directory nhân viên, KB, policy, format incident, tạo ticket local sau xác nhận, và tìm thông tin model công khai. Không đoán identifier, không gửi dữ liệu nội bộ ra web, không làm việc ngoài IT helpdesk.
 
-**Link dùng thử:** chạy local `streamlit run app.py` (không deploy). Repo: https://github.com/MaiTienHuy/K4-Day04-NhomT052AI
+**Link dùng thử:** chạy local `streamlit run app.py` (không deploy). Repo: https://github.com/MaiTienHuy/K4-Day04-NhomT052AI-PromptEngineeringToolCalling
 
 ## A3. Câu hỏi mẫu
 

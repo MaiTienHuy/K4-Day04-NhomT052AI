@@ -1,6 +1,6 @@
 # Nhóm T052AI — Lab Day 04
 
-Repository nộp bài: https://github.com/MaiTienHuy/K4-Day04-NhomT052AI
+Repository nộp bài: https://github.com/MaiTienHuy/K4-Day04-NhomT052AI-PromptEngineeringToolCalling
 
 | Mã | Vai trò | Họ tên | MSSV | GitHub username | Commit hash đại diện |
 |---|---|---|---|---|---|
