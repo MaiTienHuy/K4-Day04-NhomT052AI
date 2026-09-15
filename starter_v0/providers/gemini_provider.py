@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import time
 from typing import Any
 
 from providers.base import ModelResponse, ToolCall
@@ -73,10 +74,10 @@ class GeminiProvider:
         self,
         *,
         api_key_env: str = "GEMINI_API_KEY",
-        default_model: str = "gemini-3.5-flash",
+        default_model: str = "gemini-3.6-flash",
     ) -> None:
         self.api_key_env = api_key_env
-        self.default_model = default_model
+        self.default_model = default_model or "gemini-3.6-flash"
 
     def complete(
         self,
@@ -106,11 +107,25 @@ class GeminiProvider:
             config_kwargs["tools"] = [types.Tool(function_declarations=declarations)]
 
         client = genai.Client(api_key=api_key)
-        resp = client.models.generate_content(
-            model=model or self.default_model,
-            contents=contents,
-            config=types.GenerateContentConfig(**config_kwargs),
-        )
+        max_retries = 5
+        resp = None
+        for attempt in range(max_retries):
+            try:
+                resp = client.models.generate_content(
+                    model=model or self.default_model,
+                    contents=contents,
+                    config=types.GenerateContentConfig(**config_kwargs),
+                )
+                time.sleep(4)  # Đệm 4s để duy trì dưới ngưỡng 15 requests/phút (RPM)
+                break
+            except Exception as exc:
+                err_msg = str(exc)
+                if ("429" in err_msg or "RESOURCE_EXHAUSTED" in err_msg) and attempt < max_retries - 1:
+                    sleep_time = 15
+                    print(f" [Chạm ngưỡng RPM - chờ {sleep_time}s rồi tiếp tục...]", flush=True)
+                    time.sleep(sleep_time)
+                    continue
+                raise
 
         text_parts: list[str] = []
         calls: list[ToolCall] = []
