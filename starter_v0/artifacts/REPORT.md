@@ -188,6 +188,42 @@ Mỗi thành viên tự điền và tự commit mục của mình. Độ dài v�
 
 # PHẦN C — Checkout trước khi nộp
 
+## C1. Reflection chung của nhóm
+
+Các thành viên thảo luận trên evidence trong repository, không chỉ mô tả cảm nhận.
+
+**Mục tiêu đã hoàn thành**
+
+- Cải artifact từ run thật, không hard-code case ID: `artifacts/system_prompt.md`, `artifacts/tools.yaml`, `artifacts/version_log.csv`.
+- Base hợp lệ (`provider_error_cases == 0`, `measured_cases == total_cases`): v0 21/30 (0.70) → v1 24/30 (0.80) → v2 25/30 (0.8333) → v3 **26/30 (0.8667)**. Run: `artifacts/runs/v0_B_base_openrouter_20260915T192745909789.json`, `.../v1_...194139710401.json`, `.../v2_...194707650337.json`, `.../v3_...205921735306.json`.
+- 10 case original (5 single + 5 multi) trong `data/eval_group.json`. Group v0 5/10 → v3 **9/10** (`runs/v0_B_group_openrouter_20260915T195803509193.json`, `artifacts/runs/v3_B_group_openrouter_20260915T210207299371.json`).
+- Adversarial đủ 12 case, review thủ công: v0 5/12 → v3 **8/12**. Harness lớp tool 17/17: `runs/p3_adversarial_guardrail_report.txt`.
+- UI Streamlit `app.py` gọi `run_model_tool_loop`; 4 transcript bắt buộc trong `transcripts/` và `artifacts/transcripts/`.
+
+**Hypothesis / thay đổi tạo cải thiện rõ nhất**
+
+Không phải một file. Prompt v1 (P1) sửa cụm missing-info / confirm: H10/H11 không còn đoán ID, H12/M05/M09 không còn `create_ticket` sớm; routing base 0.7667 → **0.9333**. Tools v2 (P2) sửa wrong_tool / wrong_arg (H04 extra inspect, H13 thiếu `check=vpn`); base 0.70 → **0.8333** khi giữ prompt starter. v3 gộp hai artifact: base **0.8667**, routing **0.9667**, multiturn **1.00**, group **0.90**. Bước nhảy group 5/10 → 9/10 cho thấy case tự viết + merge đúng cặp hash quan trọng không kém metric base.
+
+**Failure còn lại**
+
+- Base residual: H02, H03, H17, H19 — lệch arg `check`/`category` và environment “demo” (H19 vẫn `check_service_status(staging)` thay vì `clarify`).
+- Group residual: G01 — intent mơ hồ shared service vs một máy.
+- Adversarial residual: A04/A10/A11 vẫn lách `confirmed=true`; A06 sai arg (`check`), không rò identifier. Lớp tool chặn được credential (A05) và ID ra web (A12), nhưng boolean `confirmed` không biết ai tạo cờ.
+
+**Cách chia việc, review và tích hợp**
+
+Làm song song trên `contrib/<username>` / `MaiTienHuy`, mỗi người chỉ commit file mình được giao. P1: prompt, `TEAMMATES.md`, version log, điều phối. P2: `tools.yaml`. P3: `eval_group.json`, group/extension/adversarial. P4: `app.py`, transcript, khung report. Merge PR không squash (#1–#4) vào `main`, rồi mới chạy v3 — không sửa prompt và tools trong cùng một vòng đo. Reflection cá nhân: B7.1–B7.4.
+
+**Nếu có thêm một vòng**
+
+Ưu tiên hai hypothesis có thể đo: (1) siết H19/G01 — environment/intent không thuộc enum thì bắt buộc `clarify`; (2) chặn `confirmed=true` khi cờ không đến từ user turn (prompt + lớp tool), rồi rerun base + adversarial A04/A10/A11.
+
+## C2. Self-reflection của từng thành viên
+
+Mỗi thành viên tự viết và tự commit mục của mình. Nội dung nằm ở B7.1–B7.4 phía trên (P1 Mai Tiến Huy, P2 Trịnh Xuân Huy, P3 Lê Việt Hoàng, P4 Hoàng Ngọc Đức).
+
+## C3. Final checkout
+
 - [x] `TEAMMATES.md` có họ tên, MSSV, GitHub username, vai trò và commit hash
 - [x] Mỗi thành viên có ít nhất một commit trên repository chung
 - [x] B7.1–B7.4 đủ 4 người, cùng 3 gạch đầu dòng; mỗi người tự commit mục của mình
@@ -197,4 +233,4 @@ Mỗi thành viên tự điền và tự commit mục của mình. Độ dài v�
 - [x] UI Streamlit hiện tool / args / result / artifact version
 - [x] 4 transcript trong `starter_v0/transcripts/`
 - [x] Không commit `.env`, API key, `.venv`, `__pycache__`, generated ticket
-- [x] URL nộp VLearn (cả nhóm cùng một link): https://github.com/MaiTienHuy/K4-Day04-NhomT052AI
+- [x] URL nộp VLearn (cả nhóm cùng một link): https://github.com/MaiTienHuy/K4-Day04-NhomT052AI-PromptEngineeringToolCalling
