@@ -47,7 +47,7 @@ Regression còn lại (để P2/`tools.yaml` xử lý arg/schema): H02 thiếu `
 - Mục tiêu core: cải artifact từ evidence, 10 team case, UI có tool trace, adversarial review.
 - Thay đổi rõ nhất ở v1: rule toàn cục (không đoán ID, confirm, trust boundary). `case_accuracy` 0.70 → 0.80; routing 0.7667 → 0.9333.
 - Rủi ro còn lại: arg `check`/`category` vẫn lệch; H19 chưa `clarify` khi environment không thuộc enum.
-- Phân việc: P1 prompt, P2 tools, P3 eval/security, P4 UI/report.
+- Artifact tách theo thí nghiệm: prompt (v1), tool declaration (v2), team eval, UI/transcript.
 - Vòng sau: v3 gộp prompt v1 + tools v2; không sửa hai artifact trong cùng một vòng đo.
 
 ## C3 checklist

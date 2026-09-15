@@ -154,7 +154,7 @@ Harness tất định 17/17 PASS: `runs/p3_adversarial_guardrail_report.txt`. `t
 - Core đã có: prompt v1, tools v2, 10 group case, UI + 4 transcript, adversarial review, version_log v0–v3. Evidence: `artifacts/runs/`, `artifacts/transcripts/`, `data/eval_group.json`, `app.py`.
 - Cải thiện rõ nhất: tách rule toàn cục (v1) khỏi schema (v2). Base 0.70 → 0.80 → 0.8333 → **0.8667**. Group 0.50 → 0.70 → **0.90**.
 - Chưa hết: H03/H17/H19, G01, adversarial A04/A10/A11.
-- Phân việc theo `PHAN-VIEC.md`; merge PR không squash.
+- Bốn thành viên đóng góp trên cùng một repository; merge pull request giữ nguyên commit riêng.
 - Vòng sau: một failure mode mỗi lần (stale/forged confirmation).
 
 ## C2. Self-reflection của từng thành viên

@@ -156,11 +156,10 @@ Ba điểm phải đọc kèm metric:
 
 ---
 
-## Evidence v2 — chỉ `tools.yaml` của P2 đổi (chạy theo `PHAN-VIEC.md` §6)
+## Evidence v2 — chỉ `tools.yaml` đổi (prompt giữ starter)
 
-**Bối cảnh:** P2 đã push `starter_v0/artifacts/tools.yaml` ở nhánh `origin/contrib/huy`
-(commit `c92f55a`) nhưng **chưa merge vào `main`**. Vì vậy P3 chạy v2 theo đúng pattern mà
-`PHAN-VIEC` §6 cho phép: checkout tạm file của P2 để test, **không commit**:
+**Bối cảnh:** bản `tools.yaml` cải tiến nằm trên nhánh `origin/contrib/huy`
+(commit `c92f55a`) khi chưa merge vào `main`. Để đo v2 độc lập, checkout tạm file đó để chạy eval, **không commit**:
 
 ```powershell
 git checkout origin/contrib/huy -- starter_v0/artifacts/tools.yaml   # lấy tools.yaml v2
@@ -454,7 +453,7 @@ python scripts/p3_paced_eval_run.py --spacing 3 --provider openrouter --version 
 python scripts/p3_adversarial_guardrail_checks.py   # 17/17 PASS, không cần model/quota
 ```
 
-v2 (dùng `tools.yaml` của P2 khi PR của P2 chưa merge — pattern `PHAN-VIEC` §6):
+v2 (`tools.yaml` mới, prompt starter; checkout tạm từ `contrib/huy` khi chưa merge):
 
 ```powershell
 cd starter_v0
