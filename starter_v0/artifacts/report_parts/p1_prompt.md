@@ -55,6 +55,6 @@ Regression còn lại (để P2/`tools.yaml` xử lý arg/schema): H02 thiếu `
 - [x] `system_prompt.md` viết lại từ nguyên tắc, không hard-code case ID
 - [x] Có bản baseline v0 để tái lập thí nghiệm
 - [x] `version_log.csv` có v0 và v1 + hypothesis + run file hợp lệ
-- [ ] `version_log.csv` đủ v3 sau live run gộp
-- [ ] Mỗi thành viên tự commit C2
+- [x] `version_log.csv` đủ v0–v3 + run hợp lệ
+- [ ] Mỗi thành viên tự commit C2 nếu giảng viên yêu cầu identity riêng
 - [x] Không commit `.env` / ticket generate
