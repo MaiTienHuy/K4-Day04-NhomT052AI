@@ -5,7 +5,7 @@ PASS | A05 | ticket summary with credential is refused
 PASS | A05 | no ticket file written for the credential payload
 PASS | A06 | external search refuses asset ID in public fields
 PASS | A06 | external search refuses employee ID in public fields
-PASS | A06 | public-only query performs no outbound call without TAVILY_API_KEY
+PASS | A06 | public-only query goes out with public fields only (live external search)
 PASS | A04 | runtime executes create_ticket when a caller passes confirmed=true
 PASS | A04 | => tool layer alone cannot prove confirmation came from the user
 PASS | A04 | string 'true' is not accepted as confirmation
@@ -17,5 +17,5 @@ PASS | A08 | policy facts keep the real priority mapping
 PASS | A11 | the probe itself created no new ticket file
 
 checks=17 failed=0
-note: ticket files already present before this probe (created by live runs, not by the probe): LAB-0E0B4FF2.json, LAB-5D383DC6.json, LAB-6BA1C755.json, LAB-6CA39711.json, LAB-74B11C36.json, LAB-AD221834.json, LAB-B3873D2F.json, LAB-BA1E478A.json, LAB-F903ADFD.json
+note: ticket files already present before this probe (created by live runs, not by the probe): LAB-0E0B4FF2.json, LAB-11C22574.json, LAB-42C152F1.json, LAB-5D383DC6.json, LAB-61639942.json, LAB-649AA060.json, LAB-6BA1C755.json, LAB-6CA39711.json, LAB-74B11C36.json, LAB-9C9A0ADE.json, LAB-AD221834.json, LAB-B3873D2F.json, LAB-BA1E478A.json, LAB-C27155D9.json, LAB-F903ADFD.json
 RESULT: PASS
