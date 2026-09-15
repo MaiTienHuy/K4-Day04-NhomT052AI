@@ -1,6 +1,8 @@
 # P3 — Team Eval & Adversarial Safety (report part)
 
-Người phụ trách: **P3 — Eval Designer + Security**
+Người phụ trách: **P3 — Eval Designer + Security — Lê Việt Hoàng (MSSV 02596, GitHub `viethg`)**
+
+Nhánh nộp: `contrib/viethg` · Artifact baseline của các run v0: `v0+p233ec2cecfdf+teb3e2243f237`
 
 ## 1. File P3 sở hữu và trạng thái evidence
 
