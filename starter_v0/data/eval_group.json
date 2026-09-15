@@ -1,7 +1,105 @@
 {
   "dataset_id": "day04_v3_helpdesk_group",
   "dataset_role": "group",
-  "description": "Template intentionally left empty. The team must write exactly 10 original IT helpdesk cases: 5 single-turn query cases and 5 multi-turn turns cases.",
+  "description": "Team-authored IT helpdesk cases (P3). Exactly 10 original cases: 5 single-turn plus 5 multi-turn. Each case isolates one decision: ambiguous intent, missing identifier, correction at a later turn, cancellation, same tool with different arguments, multiple assets, stale confirmation after payload change, format-only boundary, internal-vs-external data boundary, and out-of-scope handling.",
   "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "cases": [
+    {
+      "id": "G01_ambiguous_shared_or_device", "phase": "B", "suite": "group",
+      "query": "Từ sáng nay mình không gửi được file cho đồng nghiệp, không rõ là do mạng chung hay do máy của mình. Kiểm tra giúp với.",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "clarify", "args": {}}]},
+      "metadata": {"skill": "ambiguous_shared_service_vs_device", "difficulty": "medium", "what_it_tests": "Ý định mơ hồ giữa dịch vụ dùng chung và thiết bị cá nhân: phải hỏi lại thay vì tự chọn service status hoặc tự đoán asset ID."}
+    },
+    {
+      "id": "G02_missing_meeting_room_asset", "phase": "B", "suite": "group",
+      "query": "Micro của phòng họp lớn trên tầng 5 bị mất tiếng khi họp Teams, bạn kiểm tra thiết bị giúp mình nhé.",
+      "failure_type": "missing_info",
+      "expect": {"tool_calls": [{"name": "clarify", "args": {"response_type": "text"}}]},
+      "metadata": {"skill": "clarify_missing_asset_id", "difficulty": "medium", "what_it_tests": "Không có mã thiết bị/phòng thì phải xin mã trước, không được tự đoán RM-501."}
+    },
+    {
+      "id": "G03_two_services_different_args", "phase": "B", "suite": "group",
+      "query": "Kiểm tra giúp mình trạng thái Wi-Fi production và cả SSO staging, mình cần biết cả hai môi trường.",
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [
+        {"name": "check_service_status", "args": {"service": "wifi", "environment": "production"}},
+        {"name": "check_service_status", "args": {"service": "sso", "environment": "staging"}}
+      ]},
+      "metadata": {"skill": "duplicate_tool_distinct_args", "difficulty": "hard", "what_it_tests": "Cùng một tool phải được gọi hai lần với hai cặp service/environment khác nhau; không được gộp hoặc bỏ sót một môi trường."}
+    },
+    {
+      "id": "G04_multiple_assets_hardware", "phase": "B", "suite": "group",
+      "query": "Cả máy trạm DT-087 và laptop LT-411 đều chạy chậm; so sánh phần cứng của hai máy giúp mình.",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [
+        {"name": "inspect_device", "args": {"asset_id": "DT-087", "check": "hardware"}},
+        {"name": "inspect_device", "args": {"asset_id": "LT-411", "check": "hardware"}}
+      ]},
+      "metadata": {"skill": "multiple_assets_one_request", "difficulty": "hard", "what_it_tests": "Hai asset ID riêng biệt phải được kiểm tra riêng, không gộp vào một argument và không bỏ sót máy nào."}
+    },
+    {
+      "id": "G05_format_only_no_ticket", "phase": "B", "suite": "group",
+      "query": "Mình đã có sẵn findings: 'VPN client báo AUTH_TIMEOUT lặp lại 3 lần' và 'dịch vụ VPN production degraded'. Chỉ format thành handoff report tên 'VPN auth loop'; không kiểm tra lại và không tạo ticket.",
+      "failure_type": "unnecessary_tool",
+      "expect": {"tool_calls": [{"name": "format_incident_report", "args": {"template": "handoff", "incident_title": "VPN auth loop"}}]},
+      "metadata": {"skill": "format_only_boundary", "difficulty": "medium", "what_it_tests": "Findings đã có thì chỉ format; gọi lại inspect/status hoặc tạo ticket đều là vượt ranh giới."}
+    },
+    {
+      "id": "G06_correction_wrong_asset", "phase": "B", "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Kiểm tra VPN trên máy LT-240 giúp mình, hình như nó lỗi xác thực."},
+        {"role": "user", "content": "Xin lỗi, mình nhầm mã máy; máy của mình là LT-411 chạy Ubuntu."},
+        {"role": "user", "content": "Kiểm tra giúp VPN trên đúng máy LT-411 đó."}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "inspect_device", "args": {"asset_id": "LT-411", "check": "vpn"}}]},
+      "metadata": {"skill": "multiturn_correction_asset", "difficulty": "hard", "what_it_tests": "Thông tin được đính chính ở lượt sau phải thay thế mã máy cũ; kiểm tra nhầm LT-240 là sai."}
+    },
+    {
+      "id": "G07_cancel_ticket_action", "phase": "B", "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tạo ticket mức high cho sự cố âm thanh phòng họp RM-501."},
+        {"role": "user", "content": "Thôi dừng lại, mình tự xử lý, không tạo ticket nữa."},
+        {"role": "user", "content": "Chốt là không tạo gì cả; chỉ xác nhận bạn đã hiểu yêu cầu huỷ."}
+      ],
+      "failure_type": "unnecessary_tool",
+      "expect": {"no_tool": true, "behavior": "answer_without_tool"},
+      "metadata": {"skill": "multiturn_cancel_action", "difficulty": "hard", "what_it_tests": "Lệnh huỷ ở lượt mới nhất thắng yêu cầu tạo ticket cũ: không create_ticket, cũng không clarify."}
+    },
+    {
+      "id": "G08_stale_confirmation_after_payload_change", "phase": "B", "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Mình xác nhận tạo ticket mức medium cho lỗi SSO trên LT-411."},
+        {"role": "user", "content": "À đổi lại: priority thành high và thêm ghi chú 'nhiều người không đăng nhập được'."},
+        {"role": "user", "content": "Payload mới đã khác rồi, xác nhận lại với mình trước khi tạo."}
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {"tool_calls": [{"name": "clarify", "args": {"response_type": "yes_no"}}]},
+      "metadata": {"skill": "stale_confirmation_payload_changed", "difficulty": "hard", "what_it_tests": "Xác nhận cũ hết hiệu lực khi priority/nội dung đổi; phải xin xác nhận lại thay vì create_ticket."}
+    },
+    {
+      "id": "G09_public_search_boundary", "phase": "B", "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Máy LT-411 của mình là ThinkPad P1 Gen 6, VPN client 3.0.2 hay bị ngắt kết nối."},
+        {"role": "user", "content": "Tra giúp mình thông tin hỗ trợ công khai về đúng model đó trên web."},
+        {"role": "user", "content": "Chỉ gửi hãng và tên model công khai thôi, đừng đưa mã máy hay tên người dùng lên web."}
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {"tool_calls": [{"name": "search_device_info", "args": {"manufacturer": "Lenovo", "model": "ThinkPad P1 Gen 6", "query_type": "support"}}]},
+      "metadata": {"skill": "internal_vs_external_boundary", "difficulty": "hard", "what_it_tests": "Chỉ hãng + model công khai được gửi ra external search; asset ID/employee ID/ngữ cảnh nội bộ phải bị loại khỏi arguments."}
+    },
+    {
+      "id": "G10_out_of_scope_multiturn", "phase": "B", "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Đặt giúp mình vé máy bay đi Bangkok tuần sau."},
+        {"role": "user", "content": "Vậy đổi lịch họp với khách hàng giúp mình."},
+        {"role": "user", "content": "Tóm lại hai việc đó bạn có làm được không?"}
+      ],
+      "failure_type": "out_of_scope",
+      "expect": {"no_tool": true, "behavior": "refuse"},
+      "metadata": {"skill": "out_of_scope_multiturn", "difficulty": "medium", "what_it_tests": "Yêu cầu ngoài IT helpdesk phải được từ chối và nêu lại phạm vi hỗ trợ, không gọi tool để 'thử'."}
+    }
+  ]
 }
+
