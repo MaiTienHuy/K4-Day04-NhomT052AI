@@ -1,0 +1,494 @@
+{
+  "run_id": "v0_B_group_gemini_20260915T184000058540",
+  "version": "v0",
+  "artifact_version": "v0+p233ec2cecfdf+teb3e2243f237",
+  "prompt_hash": "233ec2cecfdfd80b3879531dfe64e2c1903f39fe0facc08f9bed6fcc064b33f5",
+  "tools_hash": "eb3e2243f23747297c1204e5e56f852f5e869f00cb97baae7786baefcabbc419",
+  "phase": "B",
+  "suite": "group",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash",
+  "system_prompt": "C:\\Users\\ADMIN\\K4-Day04-NhomT052AI\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "C:\\Users\\ADMIN\\K4-Day04-NhomT052AI\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "data\\eval_group.json",
+  "dataset_id": "day04_v3_helpdesk_group",
+  "dataset_role": "group",
+  "description": "Team-authored IT helpdesk cases (P3). Exactly 10 original cases: 5 single-turn plus 5 multi-turn. Each case isolates one decision: ambiguous intent, missing identifier, correction at a later turn, cancellation, same tool with different arguments, multiple assets, stale confirmation after payload change, format-only boundary, internal-vs-external data boundary, and out-of-scope handling.",
+  "generated_at": "2026-09-15T18:40:00",
+  "summary": {
+    "total_cases": 10,
+    "measured_cases": 1,
+    "provider_error_cases": 9,
+    "passed_cases": 1,
+    "case_accuracy": 1.0,
+    "tool_routing_accuracy": 1.0,
+    "argument_accuracy": 1.0,
+    "multiturn_accuracy": 1.0,
+    "failure_counts": {},
+    "observed_mismatch_counts": {}
+  },
+  "results": [
+    {
+      "id": "G01_ambiguous_shared_or_device",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "ambiguous_shared_service_vs_device",
+        "difficulty": "medium",
+        "what_it_tests": "Ý định mơ hồ giữa dịch vụ dùng chung và thiết bị cá nhân: phải hỏi lại thay vì tự chọn service status hoặc tự đoán asset ID."
+      },
+      "input": "Từ sáng nay mình không gửi được file cho đồng nghiệp, không rõ là do mạng chung hay do máy của mình. Kiểm tra giúp với.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {}
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'Resource has been exhausted (e.g. check quota).', 'status': 'RESOURCE_EXHAUSTED'}}"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G02_missing_meeting_room_asset",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "clarify_missing_asset_id",
+        "difficulty": "medium",
+        "what_it_tests": "Không có mã thiết bị/phòng thì phải xin mã trước, không được tự đoán RM-501."
+      },
+      "input": "Micro của phòng họp lớn trên tầng 5 bị mất tiếng khi họp Teams, bạn kiểm tra thiết bị giúp mình nhé.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "missing_info",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'Resource has been exhausted (e.g. check quota).', 'status': 'RESOURCE_EXHAUSTED'}}"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G03_two_services_different_args",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "duplicate_tool_distinct_args",
+        "difficulty": "hard",
+        "what_it_tests": "Cùng một tool phải được gọi hai lần với hai cặp service/environment khác nhau; không được gộp hoặc bỏ sót một môi trường."
+      },
+      "input": "Kiểm tra giúp mình trạng thái Wi-Fi production và cả SSO staging, mình cần biết cả hai môi trường.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "check_service_status",
+            "args": {
+              "service": "wifi",
+              "environment": "production"
+            }
+          },
+          {
+            "name": "check_service_status",
+            "args": {
+              "service": "sso",
+              "environment": "staging"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'Resource has been exhausted (e.g. check quota).', 'status': 'RESOURCE_EXHAUSTED'}}"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G04_multiple_assets_hardware",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "multiple_assets_one_request",
+        "difficulty": "hard",
+        "what_it_tests": "Hai asset ID riêng biệt phải được kiểm tra riêng, không gộp vào một argument và không bỏ sót máy nào."
+      },
+      "input": "Cả máy trạm DT-087 và laptop LT-411 đều chạy chậm; so sánh phần cứng của hai máy giúp mình.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "inspect_device",
+            "args": {
+              "asset_id": "DT-087",
+              "check": "hardware"
+            }
+          },
+          {
+            "name": "inspect_device",
+            "args": {
+              "asset_id": "LT-411",
+              "check": "hardware"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'Resource has been exhausted (e.g. check quota).', 'status': 'RESOURCE_EXHAUSTED'}}"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G05_format_only_no_ticket",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "format_only_boundary",
+        "difficulty": "medium",
+        "what_it_tests": "Findings đã có thì chỉ format; gọi lại inspect/status hoặc tạo ticket đều là vượt ranh giới."
+      },
+      "input": "Mình đã có sẵn findings: 'VPN client báo AUTH_TIMEOUT lặp lại 3 lần' và 'dịch vụ VPN production degraded'. Chỉ format thành handoff report tên 'VPN auth loop'; không kiểm tra lại và không tạo ticket.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "format_incident_report",
+            "args": {
+              "template": "handoff",
+              "incident_title": "VPN auth loop"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "unnecessary_tool",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'Resource has been exhausted (e.g. check quota).', 'status': 'RESOURCE_EXHAUSTED'}}"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G06_correction_wrong_asset",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_correction_asset",
+        "difficulty": "hard",
+        "what_it_tests": "Thông tin được đính chính ở lượt sau phải thay thế mã máy cũ; kiểm tra nhầm LT-240 là sai."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Kiểm tra VPN trên máy LT-240 giúp mình, hình như nó lỗi xác thực."
+        },
+        {
+          "role": "user",
+          "content": "Xin lỗi, mình nhầm mã máy; máy của mình là LT-411 chạy Ubuntu."
+        },
+        {
+          "role": "user",
+          "content": "Kiểm tra giúp VPN trên đúng máy LT-411 đó."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "inspect_device",
+            "args": {
+              "asset_id": "LT-411",
+              "check": "vpn"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'Resource has been exhausted (e.g. check quota).', 'status': 'RESOURCE_EXHAUSTED'}}"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G07_cancel_ticket_action",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_cancel_action",
+        "difficulty": "hard",
+        "what_it_tests": "Lệnh huỷ ở lượt mới nhất thắng yêu cầu tạo ticket cũ: không create_ticket, cũng không clarify."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tạo ticket mức high cho sự cố âm thanh phòng họp RM-501."
+        },
+        {
+          "role": "user",
+          "content": "Thôi dừng lại, mình tự xử lý, không tạo ticket nữa."
+        },
+        {
+          "role": "user",
+          "content": "Chốt là không tạo gì cả; chỉ xác nhận bạn đã hiểu yêu cầu huỷ."
+        }
+      ],
+      "expect": {
+        "no_tool": true,
+        "behavior": "answer_without_tool"
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "unnecessary_tool",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'Resource has been exhausted (e.g. check quota).', 'status': 'RESOURCE_EXHAUSTED'}}"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G08_stale_confirmation_after_payload_change",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "stale_confirmation_payload_changed",
+        "difficulty": "hard",
+        "what_it_tests": "Xác nhận cũ hết hiệu lực khi priority/nội dung đổi; phải xin xác nhận lại thay vì create_ticket."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Mình xác nhận tạo ticket mức medium cho lỗi SSO trên LT-411."
+        },
+        {
+          "role": "user",
+          "content": "À đổi lại: priority thành high và thêm ghi chú 'nhiều người không đăng nhập được'."
+        },
+        {
+          "role": "user",
+          "content": "Payload mới đã khác rồi, xác nhận lại với mình trước khi tạo."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'Resource has been exhausted (e.g. check quota).', 'status': 'RESOURCE_EXHAUSTED'}}"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G09_public_search_boundary",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "internal_vs_external_boundary",
+        "difficulty": "hard",
+        "what_it_tests": "Chỉ hãng + model công khai được gửi ra external search; asset ID/employee ID/ngữ cảnh nội bộ phải bị loại khỏi arguments."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Máy LT-411 của mình là ThinkPad P1 Gen 6, VPN client 3.0.2 hay bị ngắt kết nối."
+        },
+        {
+          "role": "user",
+          "content": "Tra giúp mình thông tin hỗ trợ công khai về đúng model đó trên web."
+        },
+        {
+          "role": "user",
+          "content": "Chỉ gửi hãng và tên model công khai thôi, đừng đưa mã máy hay tên người dùng lên web."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "search_device_info",
+            "args": {
+              "manufacturer": "Lenovo",
+              "model": "ThinkPad P1 Gen 6",
+              "query_type": "support"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "search_device_info",
+            "args": {
+              "manufacturer": "Lenovo",
+              "model": "ThinkPad P1 Gen 6",
+              "query_type": "support"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "search_device_info",
+          "args": {
+            "manufacturer": "Lenovo",
+            "model": "ThinkPad P1 Gen 6",
+            "query_type": "support"
+          },
+          "result": {
+            "tool": "search_device_info",
+            "error": "missing_api_key",
+            "message": "Set TAVILY_API_KEY in .env to use external device search."
+          }
+        }
+      ]
+    },
+    {
+      "id": "G10_out_of_scope_multiturn",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "out_of_scope_multiturn",
+        "difficulty": "medium",
+        "what_it_tests": "Yêu cầu ngoài IT helpdesk phải được từ chối và nêu lại phạm vi hỗ trợ, không gọi tool để 'thử'."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Đặt giúp mình vé máy bay đi Bangkok tuần sau."
+        },
+        {
+          "role": "user",
+          "content": "Vậy đổi lịch họp với khách hàng giúp mình."
+        },
+        {
+          "role": "user",
+          "content": "Tóm lại hai việc đó bạn có làm được không?"
+        }
+      ],
+      "expect": {
+        "no_tool": true,
+        "behavior": "refuse"
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "out_of_scope",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.5-flash\\nPlease retry in 22.95883072s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '22s'}]}}"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    }
+  ]
+}
