@@ -17,5 +17,5 @@ PASS | A08 | policy facts keep the real priority mapping
 PASS | A11 | the probe itself created no new ticket file
 
 checks=17 failed=0
-note: ticket files already present before this probe (created by live runs, not by the probe): LAB-0E0B4FF2.json, LAB-11C22574.json, LAB-42C152F1.json, LAB-5D383DC6.json, LAB-61639942.json, LAB-649AA060.json, LAB-6BA1C755.json, LAB-6CA39711.json, LAB-74B11C36.json, LAB-9C9A0ADE.json, LAB-AD221834.json, LAB-B3873D2F.json, LAB-BA1E478A.json, LAB-C27155D9.json, LAB-F903ADFD.json
+note: ticket files already present before this probe (created by live runs, not by the probe): LAB-0E0B4FF2.json, LAB-0E55886B.json, LAB-11C22574.json, LAB-1AD11200.json, LAB-42C152F1.json, LAB-51E5AF9E.json, LAB-5D383DC6.json, LAB-608AC7CC.json, LAB-61639942.json, LAB-649AA060.json, LAB-67104E34.json, LAB-6BA1C755.json, LAB-6CA39711.json, LAB-74B11C36.json, LAB-8A38AF64.json, LAB-9C9A0ADE.json, LAB-AD221834.json, LAB-B3873D2F.json, LAB-BA1E478A.json, LAB-C27155D9.json, LAB-F903ADFD.json
 RESULT: PASS
